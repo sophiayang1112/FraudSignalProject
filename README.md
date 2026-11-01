@@ -1,8 +1,8 @@
-# FraudSignalLab
+# FraudSignalProject
 
 **Loan fraud detection and risk analytics using application data and transaction history.**
 
-FraudSignalLab builds behavioral and financial features, compares machine learning models, and produces application-level fraud scores and review flags. A secondary classification model analyzes historical case outcomes. The workflow covers feature engineering, class-imbalance treatment, model evaluation, interpretation, and batch prediction.
+FraudSignalProject builds behavioral and financial features, compares machine learning models, and produces application-level fraud scores and review flags. A secondary classification model analyzes historical case outcomes. The workflow covers feature engineering, class-imbalance treatment, model evaluation, interpretation, and batch prediction.
 
 ## Project objectives
 
