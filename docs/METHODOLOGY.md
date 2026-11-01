@@ -2,21 +2,21 @@
 
 ## Simulation and schema
 
-The simulator creates 1,400 fictional customers, two applications each, and timestamped transactions. Customer IDs are local integers and are never predictors. There are no names, addresses, protected demographics, bank accounts, or external data sources.
+The simulator creates 1,400 synthetic customers, two applications each, and timestamped transactions. Customer IDs are local integers and are never predictors. There are no names, addresses, protected demographics, bank accounts, or external data sources.
 
 Application inputs: `application_id`, `customer_id`, `submitted_at` (UTC), `income_monthly`, `amount_requested`, `monthly_obligations`, `credit_score`, `term_months`, `purpose`, and `employment_type`. Transaction inputs: unique `transaction_id`, `customer_id`, `occurred_at` (UTC), nonnegative `amount`, and `merchant`.
 
-Missing numerical/categorical application values are allowed; income must be positive when present. IDs and timestamps cannot be missing. Duplicate application or transaction IDs are rejected. All timestamps are normalized to UTC. A window is [submitted_at - days, submitted_at). Transactions at or after application are never used. The demo assumes transaction event time equals availability time; delayed arrival is not modeled.
+Missing numerical/categorical application values are allowed; income must be positive when present. IDs and timestamps cannot be missing. Duplicate application or transaction IDs are rejected. All timestamps are normalized to UTC. A window is [submitted_at - days, submitted_at). Transactions at or after application are never used. The pipeline assumes transaction event time equals availability time; delayed arrival is not modeled.
 
 ## Targets
 
 Fraud labels are sampled from a disclosed logistic mechanism using credit score, affordability, prior flagged-category activity, requested-principal ratio, and employment category. This mechanism is a fictional statistical relationship, not an empirical fraud finding. Labels are generated before injecting missingness. Default/nonpayment is not the fraud target.
 
-For a separate toy historical outcome target, simulated fraud becomes confirmed_fraud; otherwise low credit scores or high affordability ratios trigger declined and the rest become approved. Both targets and all IDs are excluded from features. Because the tasks are structurally related by design, multiclass accuracy is not evidence of independent real-world underwriting capability.
+For the separate rule-generated historical outcome target, simulated fraud becomes confirmed_fraud; otherwise low credit scores or high affordability ratios trigger declined and the rest become approved. Both targets and all IDs are excluded from features. Because the tasks are structurally related by design, multiclass accuracy is not evidence of independent real-world underwriting capability.
 
 ## Splits and transformations
 
-GroupShuffleSplit reserves 20% of customers for test and 20% for validation, leaving 60% for training. Both applications for a customer stay together. Group splitting is not stratified; realized prevalence is saved per split, and training aborts if binary classes are missing. This estimates transfer to unseen fictional customers, not performance over time. Random simulated dates do not justify an out-of-time validation claim.
+GroupShuffleSplit reserves 20% of customers for test and 20% for validation, leaving 60% for training. Both applications for a customer stay together. Group splitting is not stratified; realized prevalence is saved per split, and training aborts if binary classes are missing. This estimates transfer to unseen synthetic customers, not performance over time. Random simulated dates do not justify an out-of-time validation claim.
 
 Numeric training predictors pass through median imputation, training-only 1st/99th percentile bounds, and standardization. Categories are imputed and ordinal encoded, SMOTENC resamples training classes with three neighbors, and one-hot encoding follows. Unknown inference categories are handled without refitting. The unsampled baseline preserves training prevalence.
 
